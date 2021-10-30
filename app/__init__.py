@@ -12,6 +12,8 @@ from config import Config  # NEW!!!!!
 import logging
 from flask.logging import default_handler
 from logging.handlers import RotatingFileHandler
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 ### Flask extension objects instantiation ###
 mail = Mail()
@@ -43,6 +45,9 @@ def create_app():
     # Register error handlers
     register_error_handlers(app)
 
+    # Databse Stuff
+    db = SQLAlchemy(app)
+    migrate = Migrate(app, db) 
     return app
 
 
@@ -50,9 +55,11 @@ def create_app():
 def register_blueprints(app):
     from app.auth import auth_blueprint
     from app.main import main_blueprint
+    from app.googauth import goog_blueprint
 
     app.register_blueprint(auth_blueprint, url_prefix='/users')
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(goog_blueprint, url_prefix='/googauth')
 
 def initialize_extensions(app):
     mail.init_app(app)

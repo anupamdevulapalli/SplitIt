@@ -19,7 +19,7 @@ class Config:
     WTF_CSRF_ENABLED = True
 
     # Settings applicable to all environments
-    SECRET_KEY = os.getenv('SECRET_KEY', default='A very terrible secret key.')
+    SECRET_KEY = os.getenv('SECRET_KEY', default=os.urandom(24))
     
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 465
@@ -30,12 +30,22 @@ class Config:
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_USERNAME', default='')
     MAIL_SUPPRESS_SEND = False
 
+    # Database stuff
+    HOST = str(os.environ.get("DB_HOST"))
+    DATABASE = str(os.environ.get("DB_DATABASE"))
+    USERNAME = str(os.environ.get("DB_USERNAME"))
+    PASSWORD = str(os.environ.get("DB_PASSWORD"))
+    SQLALCHEMY_DATABASE_URI = 'postgresql://' + USERNAME + \
+        ':' + PASSWORD + '@' + HOST + '/' + DATABASE
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_RECORD_QUERIES = True
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL ')
     RESULT_BACKEND = os.getenv('RESULT_BACKEND')
     
-
+    # Google creds
+    GCLIENTID = os.getenv('GOOGLE_CLIENT_ID')
+    GCLIENTSEC = os.getenv('GOOGLE_CLIENT_SECRET')
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, 'dev.db')
@@ -53,7 +63,3 @@ class ProductionConfig(Config):
     FLASK_ENV = 'production'
     # Postgres database URL has the form postgresql://username:password@hostname/database
     SQLALCHEMY_DATABASE_URI = os.getenv('PROD_DATABASE_URl', default="sqlite:///" + os.path.join(basedir, 'prod.db'))
-
-
-
-
