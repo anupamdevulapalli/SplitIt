@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 class SecUsers(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(250), primary_key=True)
     full_name = db.Column(db.String(250))
     # username = db.Column(db.String(250), nullable=True)
     email = db.Column(db.String(60), index=True, unique=True, nullable=False)

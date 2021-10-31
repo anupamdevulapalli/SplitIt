@@ -21,6 +21,8 @@ mail = Mail()
 ### Instantiate Celery ###
 celery = Celery(__name__, broker=Config.CELERY_BROKER_URL, result_backend=Config.RESULT_BACKEND)  # NEW!!!!!
 
+db = SQLAlchemy()
+
 ### Application Factory ###
 def create_app():
 
@@ -46,8 +48,16 @@ def create_app():
     register_error_handlers(app)
 
     # Databse Stuff
-    db = SQLAlchemy(app)
-    migrate = Migrate(app, db) 
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()  # Create sql tables for our data models
+
+    # user = SecUsers(id=123, full_name='Anupam', email='a@a.com')
+    # db.session.add(user)
+    # db.session.commit()
+        
+    # migrate = Migrate(app, db) 
     return app
 
 

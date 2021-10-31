@@ -31,14 +31,14 @@ class Config:
     MAIL_SUPPRESS_SEND = False
 
     # Database stuff
-    HOST = str(os.environ.get("DB_HOST"))
-    DATABASE = str(os.environ.get("DB_DATABASE"))
-    USERNAME = str(os.environ.get("DB_USERNAME"))
-    PASSWORD = str(os.environ.get("DB_PASSWORD"))
-    SQLALCHEMY_DATABASE_URI = 'postgresql://' + USERNAME + \
-        ':' + PASSWORD + '@' + HOST + '/' + DATABASE
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_RECORD_QUERIES = True
+    # HOST = str(os.environ.get("DB_HOST"))
+    # DATABASE = str(os.environ.get("DB_DATABASE"))
+    # USERNAME = str(os.environ.get("DB_USERNAME"))
+    # PASSWORD = str(os.environ.get("DB_PASSWORD"))
+    # SQLALCHEMY_DATABASE_URI = 'postgresql://' + USERNAME + \
+    #     ':' + PASSWORD + '@' + HOST + '/' + DATABASE
+    # SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # SQLALCHEMY_RECORD_QUERIES = True
 
     CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL ')
     RESULT_BACKEND = os.getenv('RESULT_BACKEND')
@@ -49,6 +49,7 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, 'dev.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
    # SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://postgres:{os.getenv('DB_PASSWORD')}@postgres:5432/dev_db"
 
 class TestingConfig(Config):
@@ -63,3 +64,4 @@ class ProductionConfig(Config):
     FLASK_ENV = 'production'
     # Postgres database URL has the form postgresql://username:password@hostname/database
     SQLALCHEMY_DATABASE_URI = os.getenv('PROD_DATABASE_URl', default="sqlite:///" + os.path.join(basedir, 'prod.db'))
+
