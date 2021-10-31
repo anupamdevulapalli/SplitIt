@@ -1,45 +1,28 @@
-from app import db
-from flask_login import UserMixin
-from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin
+from flask_dance.consumer.storage.sqla import OAuthConsumerMixin
 
 
-class SecUsers(db.Model, UserMixin):
-    id = db.Column(db.String(250), primary_key=True)
-    full_name = db.Column(db.String(250))
-    # username = db.Column(db.String(250), nullable=True)
-    email = db.Column(db.String(60), index=True, unique=True, nullable=False)
-    # password = db.Column(db.String(250), nullable=True)
-    # verification = db.Column(db.Integer, nullable=True, default='0')
-    # rememberToken = db.Column(
-    #     db.String(250),
-    #     nullable=True,
-    #     unique=True,
-    # )
-    # created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    # created_by = db.Column(db.String(250), nullable=True)
-    # updated_at = db.Column(db.DateTime, default=datetime.utcnow)
-    # updated_by = db.Column(db.String(250), nullable=True)
-    # deleted_at = db.Column(db.DateTime, default=datetime.utcnow)
-    # deleted_by = db.Column(db.String(250), nullable=True)
+db = SQLAlchemy()
 
-    def __repr__(self):
-        return '<SecUsers {}>'.format(self.full_name)
 
-    # def setPassword(self, password):
-    #     self.password = password
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(256), unique=True)
+    email = db.Column(db.String(256), unique=True)
 
-    # def checkPassword(self, password):
-    #     return check_password_hash(self.password, password)
-    
-    # @staticmethod
-    # def get(user_id):
-    #     user = SecUsers.query.filter_by(id=user_id).first()
-    #     if not user:
-    #         return None
 
-    #     user = SecUsers(
-    #         id=user.id, full_name=user.full_name, email=user.email
-    #     )
-    #     return user
+class OAuth(OAuthConsumerMixin, db.Model):
+    provider_user_id = db.Column(db.String(256), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    user = db.relationship(User)
+
+
+# setup login manager
+login_manager = LoginManager()
+
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))

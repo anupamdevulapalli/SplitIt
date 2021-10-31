@@ -14,6 +14,7 @@ from flask.logging import default_handler
 from logging.handlers import RotatingFileHandler
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from .models import db, login_manager
 
 ### Flask extension objects instantiation ###
 mail = Mail()
@@ -21,7 +22,7 @@ mail = Mail()
 ### Instantiate Celery ###
 celery = Celery(__name__, broker=Config.CELERY_BROKER_URL, result_backend=Config.RESULT_BACKEND)  # NEW!!!!!
 
-db = SQLAlchemy()
+# db = SQLAlchemy()
 
 ### Application Factory ###
 def create_app():
@@ -48,15 +49,16 @@ def create_app():
     register_error_handlers(app)
 
     # Databse Stuff
+ 
     db.init_app(app)
-
+    
     with app.app_context():
+        db.drop_all()
         db.create_all()  # Create sql tables for our data models
+    
+    login_manager.init_app(app)
+    login_manager.login_view = "google.login"
 
-    # user = SecUsers(id=123, full_name='Anupam', email='a@a.com')
-    # db.session.add(user)
-    # db.session.commit()
-        
     # migrate = Migrate(app, db) 
     return app
 
