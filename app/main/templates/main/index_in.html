@@ -3,13 +3,11 @@
     <title>Flask-Dance Google SQLAlchemy</title>
 </head>
 <body>
-  <h1>Login</h1>
-{% with messages = get_flashed_messages(with_categories=true) %}
+  <h1>This is the front page of the application</h1>
+  {% with messages = get_flashed_messages() %}
   {% if messages %}
-    <ul class="flash">
-    {% for category, message in messages %}
-      <li class="{{ category }}">{{ message }}</li>
-    {% endfor %}
+    <ul class=flashes>
+      <li>{{ messages[-1] }}</li>
     </ul>
   {% endif %}
 {% endwith %}

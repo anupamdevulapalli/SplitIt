@@ -61,7 +61,7 @@ def google_logged_in(goog_blueprint, token):
         login_user(user)
         flash("Successfully signed in.")
 
-    # Disable Flask-Dance's default behavior for saving the OAuth token
+    # Disable Flask-Dance's default behavior for saving the OAuth token. This can be also done if you just return a redirect object
     return redirect(url_for("main.home"))
 
 # notify on OAuth provider error

@@ -3,16 +3,9 @@
     <title>Flask-Dance Google SQLAlchemy</title>
 </head>
 <body>
-  <h1>Logout</h1>
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="flash">
-    {% for category, message in messages %}
-      <li class="{{ category }}">{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+  <h1>This is a secret page that we can only see after logging in</h1>
+
+
 {% if current_user.is_authenticated %}
   You are logged in as {{ current_user.email }}!
   <a href="{{ url_for("google.logout") }}">Log out</a>
